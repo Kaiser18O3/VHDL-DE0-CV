@@ -4,10 +4,6 @@
 			"name" : "Top",
 			"pins" : [
 				{
-					"name" : "trigger",
-					"strict" : false
-				},
-				{
 					"name" : "HEX0[0]",
 					"strict" : false
 				},
@@ -92,11 +88,15 @@
 					"strict" : false
 				},
 				{
-					"name" : "clock_50",
+					"name" : "GPIO_0[0]",
 					"strict" : false
 				},
 				{
-					"name" : "echo",
+					"name" : "GPIO_0[1]",
+					"strict" : false
+				},
+				{
+					"name" : "clock_50",
 					"strict" : false
 				}
 			]
