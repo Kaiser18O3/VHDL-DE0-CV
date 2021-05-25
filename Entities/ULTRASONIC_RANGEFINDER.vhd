@@ -17,22 +17,19 @@ end entity;
 
 architecture rtl of ULTRASONIC_RANGEFINDER is
   constant measurement_cycle : integer := 600000; -- time one measurement cycle takes (in us)
-  constant trigger_time      : integer := 10; -- duration of the trigger pulse (in us)
+  constant trigger_time      : integer := 400; -- duration of the trigger pulse (in us)
 
-  signal icnt_mm : std_logic_vector (3 downto 0) := x"0";
-  signal icnt_cm : std_logic_vector (3 downto 0) := x"0";
-  signal icnt_dm : std_logic_vector (3 downto 0) := x"0";
-  signal nanos   : integer                       := 0;
-  signal micros  : integer                       := 0;
-  signal enable  : std_logic                     := '0';
+  signal icnt_mm  : std_logic_vector (3 downto 0) := x"0";
+  signal icnt_cm  : std_logic_vector (3 downto 0) := x"0";
+  signal icnt_dm  : std_logic_vector (3 downto 0) := x"0";
+  signal nanos    : integer                       := 0;
+  signal micros   : integer                       := 0;
+  signal clk_slow : std_logic                     := '0';
+  signal cnt      : std_logic_vector (11 downto 0);
 begin
 
   micros    <= nanos/1000;
   q_trigger <= '1' when micros < trigger_time else '0';
-  
-    q_mm <= icnt_mm;
-      q_cm <= icnt_cm;
-      q_dm <= icnt_dm;
 
   process (clock_50)
   begin
@@ -45,20 +42,27 @@ begin
     end if;
   end process;
 
-  process (nanos, echo)
+  process (clock_50)
   begin
-    if echo'event and echo = '0' then
-     -- q_mm <= icnt_mm;
-     -- q_cm <= icnt_cm;
-      --q_dm <= icnt_dm;
+
+    if cnt > X"6A4" then
+      cnt      <= x"000";
+      clk_slow <= not clk_slow;
     end if;
 
-    if echo = '0' then
-      icnt_mm <= x"0";
-      icnt_cm <= x"0";
-      icnt_dm <= x"0";
-    else
-      if (nanos mod 680) = 0 then
+  end process;
+
+  process (clk_slow, echo)
+  begin
+
+    if echo'event and echo = '0' then
+      q_mm <= icnt_mm;
+      q_cm <= icnt_cm;
+      q_dm <= icnt_dm;
+    end if;
+
+    if echo = '1' then
+      if clk_slow'event and clk_slow = '1' then
         if icnt_mm = x"9" then
           icnt_mm <= x"0";
           if icnt_cm = x"9" then
@@ -75,7 +79,10 @@ begin
           icnt_mm <= icnt_mm + 1;
         end if;
       end if;
+    else
+      icnt_mm <= x"0";
+      icnt_cm <= x"0";
+      icnt_dm <= x"0";
     end if;
-
   end process;
 end architecture;
