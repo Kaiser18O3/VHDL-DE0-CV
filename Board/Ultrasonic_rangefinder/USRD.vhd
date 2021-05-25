@@ -23,8 +23,8 @@ architecture rtl of USRD is
   signal h        : std_logic_vector(3 downto 0);
 begin
 
-GPIO_0(34) <= GPIO_0(0);
-GPIO_0(35) <= GPIO_0(1);
+  GPIO_0(34) <= GPIO_0(0);
+  GPIO_0(35) <= GPIO_0(1);
 
   USR : entity WORK.ULTRASONIC_RANGEFINDER
     port map(

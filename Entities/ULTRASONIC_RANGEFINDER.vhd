@@ -42,17 +42,19 @@ begin
     end if;
   end process;
 
-  process (clock_50)
+  devider : process (clock_50)
   begin
-
-    if cnt > X"6A4" then
-      cnt      <= x"000";
-      clk_slow <= not clk_slow;
+    if clock_50'event and clock_50 = '1' then
+      if cnt > X"6A4" then
+        cnt      <= x"000";
+        clk_slow <= not clk_slow;
+      else
+        cnt <= cnt + 1;
+      end if;
     end if;
-
   end process;
 
-  process (clk_slow, echo)
+  counter : process (clk_slow, echo)
   begin
 
     if echo'event and echo = '0' then
@@ -61,8 +63,8 @@ begin
       q_dm <= icnt_dm;
     end if;
 
-    if echo = '1' then
-      if clk_slow'event and clk_slow = '1' then
+    if clk_slow'event and clk_slow = '1' then
+      if echo = '1' then
         if icnt_mm = x"9" then
           icnt_mm <= x"0";
           if icnt_cm = x"9" then
@@ -78,11 +80,11 @@ begin
         else
           icnt_mm <= icnt_mm + 1;
         end if;
+      else
+        icnt_mm <= x"0";
+        icnt_cm <= x"0";
+        icnt_dm <= x"0";
       end if;
-    else
-      icnt_mm <= x"0";
-      icnt_cm <= x"0";
-      icnt_dm <= x"0";
     end if;
   end process;
 end architecture;
