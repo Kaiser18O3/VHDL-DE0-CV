@@ -10,17 +10,20 @@ entity USRD is
     GPIO_0   : inout std_logic_vector(35 downto 0);
     HEX0     : out std_logic_vector(6 downto 0);
     HEX1     : out std_logic_vector(6 downto 0);
-    HEX2     : out std_logic_vector(6 downto 0)
+    HEX2     : out std_logic_vector(6 downto 0);
+    HEX3     : out std_logic_vector(6 downto 0);
+    HEX4     : out std_logic_vector(6 downto 0);
+    HEX5     : out std_logic_vector(6 downto 0);
+    LEDR     : out std_logic_vector(9 downto 0)
 
   );
 end entity;
 
 architecture rtl of USRD is
-  signal clock_ms : std_logic;
-  signal teiler   : std_logic_vector (27 downto 0);
-  signal e        : std_logic_vector(3 downto 0);
-  signal z        : std_logic_vector(3 downto 0);
-  signal h        : std_logic_vector(3 downto 0);
+  signal e : std_logic_vector(3 downto 0);
+  signal z : std_logic_vector(3 downto 0);
+  signal h : std_logic_vector(3 downto 0);
+  signal t : std_logic_vector(3 downto 0);
 begin
 
   GPIO_0(34) <= GPIO_0(0);
@@ -33,25 +36,42 @@ begin
       q_trigger => GPIO_0(1),
       q_mm      => e,
       q_cm      => z,
-      q_dm      => h
+      q_dm      => h,
+      q_m       => t
     );
 
-  Anzeige_1 : entity WORK.SEVENSEGDEC
-    port map(
-      bcd    => e,
-      balken => HEX0
-    );
+  -- Anzeige_1 (EINHEIT)
+  HEX0 <= "0100111";
 
+  -- mm
   Anzeige_2 : entity WORK.SEVENSEGDEC
     port map(
-      bcd    => z,
+      bcd    => e,
       balken => HEX1
     );
 
+  -- Anzeige_3 (,)
+  HEX2 <= "1111011";
+
+  -- cm
   Anzeige_3 : entity WORK.SEVENSEGDEC
     port map(
+      bcd    => z,
+      balken => HEX3
+    );
+
+  -- dm
+  Anzeige_5 : entity WORK.SEVENSEGDEC
+    port map(
       bcd    => h,
-      balken => HEX2
+      balken => HEX4
+    );
+
+  -- m
+  Anzeige_6 : entity WORK.SEVENSEGDEC
+    port map(
+      bcd    => t,
+      balken => HEX5
     );
 
 end architecture;
