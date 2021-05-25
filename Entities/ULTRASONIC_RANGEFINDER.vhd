@@ -21,7 +21,7 @@ architecture rtl of ULTRASONIC_RANGEFINDER is
   constant trigger_time      : integer := 400; -- duration of the trigger pulse (in us)
 
   signal clk_mm      : std_logic := '0';
-  signal cnt_divider : std_logic_vector (7 downto 0); --11
+  signal cnt_divider : std_logic_vector (7 downto 0);
 
   signal icnt_mm : std_logic_vector (3 downto 0) := x"0";
   signal icnt_cm : std_logic_vector (3 downto 0) := x"0";
@@ -49,7 +49,7 @@ begin
   divider : process (clock_50)
   begin
     if clock_50'event and clock_50 = '1' then
-      if cnt_divider > X"91" then --A28
+      if cnt_divider > X"91" then
         cnt_divider <= x"00";
         clk_mm      <= not clk_mm;
       else
