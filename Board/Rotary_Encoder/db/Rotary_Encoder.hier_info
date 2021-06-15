@@ -1,4 +1,5 @@
 |Rotary_Encoder
+clock_50 => debouncer:DEBOUNCER_SW.clk
 clock_50 => debouncer:DEBOUNCER.clk
 GPIO_0[3] <> <UNC>
 GPIO_0[4] <> <UNC>
@@ -58,6 +59,35 @@ HEX1[4] <= sevensegdec:Anzeige_2.balken[4]
 HEX1[5] <= sevensegdec:Anzeige_2.balken[5]
 HEX1[6] <= sevensegdec:Anzeige_2.balken[6]
 SW[0] => clk.OUTPUTSELECT
+
+
+|Rotary_Encoder|DEBOUNCER:DEBOUNCER_SW
+clk => idebounced_out.CLK
+clk => lock_cnt[0].CLK
+clk => lock_cnt[1].CLK
+clk => lock_cnt[2].CLK
+clk => lock_cnt[3].CLK
+clk => lock_cnt[4].CLK
+clk => lock_cnt[5].CLK
+clk => lock_cnt[6].CLK
+clk => lock_cnt[7].CLK
+clk => lock_cnt[8].CLK
+clk => lock_cnt[9].CLK
+clk => lock_cnt[10].CLK
+clk => lock_cnt[11].CLK
+clk => lock_cnt[12].CLK
+clk => lock_cnt[13].CLK
+clk => lock_cnt[14].CLK
+clk => lock_cnt[15].CLK
+clk => lock_cnt[16].CLK
+clk => lock_cnt[17].CLK
+clk => lock_cnt[18].CLK
+clk => lock_cnt[19].CLK
+clk => bounced_ff.CLK
+bounced_in => bounced.IN1
+bounced_in => idebounced_out.DATAB
+bounced_in => bounced_ff.DATAIN
+debounced_out <= idebounced_out.DB_MAX_OUTPUT_PORT_TYPE
 
 
 |Rotary_Encoder|DEBOUNCER:DEBOUNCER

@@ -20,6 +20,7 @@ architecture rtl of Rotary_Encoder is
   signal h      : std_logic_vector(3 downto 0);
   signal clk    : std_logic;
   signal clk_db : std_logic;
+  signal reset:std_logic;
 
 begin
 
@@ -28,6 +29,15 @@ begin
   GPIO_0(32) <= GPIO_0(2);
 
   clk <= GPIO_0(0) when SW(0) = '1' else clk_db;
+  
+    
+  DEBOUNCER_SW : entity WORK.DEBOUNCER
+    port map(
+      clk           => clock_50,
+      bounced_in    => GPIO_0(2),
+      debounced_out => reset
+    );
+
 
   DEBOUNCER : entity WORK.DEBOUNCER
     port map(
@@ -41,7 +51,7 @@ begin
       clk    => clk,
       updown => GPIO_0(1),
       enable => '1',
-      reset  => '0',
+      reset  => not reset,
       q_e    => e,
       q_z    => z,
       q_h    => h
